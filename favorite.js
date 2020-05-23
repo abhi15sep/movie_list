@@ -11,9 +11,8 @@
   // listen to data panel
   dataPanel.addEventListener('click', (event) => {
     if (event.target.matches('.btn-show-movie')) {
-      const data = event.target.dataset
-      // console.log(data)
-      showMovie(data.title, data.poster_path, data.release_date, data.overview)
+      const info = JSON.parse(decodeURIComponent(event.target.dataset.info))
+      showMovie(info)
     } else if (event.target.matches('.btn-remove-favorite')) {
       // console.log(event.target.dataset.id)
       removeFavoriteItem(event.target.dataset.id)
@@ -32,7 +31,7 @@
             </div>
             <div class="card-footer">
               <!-- "More" button -->
-              <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-title="${item.title}" data-poster_path="${item.poster_path}", data-release_date="${item.release_date}", data-overview="${item.overview}">More</button>
+              <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-info="${encodeURIComponent(JSON.stringify(item))}">More</button>
               <!-- "Delete" button -->
               <button class="btn btn-danger btn-remove-favorite" data-id="${item.id}">X</button>
             </div>
@@ -43,17 +42,17 @@
     dataPanel.innerHTML = htmlContent
   }
 
-  function showMovie(title, poster_path, release_date, overview) {
+  function showMovie(info) {
     const modalTitle = document.getElementById('show-movie-title')
     const modalImg = document.getElementById('show-movie-image')
     const modalDate = document.getElementById('show-movie-date')
     const modalDescription = document.getElementById('show-movie-description')
-    modalTitle.textContent = title
+    modalTitle.textContent = info.title
     modalImg.innerHTML = `
-      <img src="${POSTER_URL}${poster_path}" class="img-fluid" alt="Responsive image">
+      <img src="${POSTER_URL}${info.poster_path}" class="img-fluid" alt="Responsive image">
     `
-    modalDate.textContent = `release at: ${release_date}`
-    modalDescription.textContent = `${overview}`
+    modalDate.textContent = `release at: ${info.release_date}`
+    modalDescription.textContent = `${info.overview}`
   }
 
   function removeFavoriteItem(id) {
