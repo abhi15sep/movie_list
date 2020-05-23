@@ -1,15 +1,12 @@
 # Movie List
-A simple web application for movie fanatic
+A simple web application of movies that user can store their favorite list locally.  
+Built with JavaScript/HTML/CSS, Axios, Bootstrap, and TMDb APIs (but is not endorsed or certified by TMDb).
 
 ## Features
-- listing movies from movie api
-- searching movies by title
-- add movies to your favorite list
-- manage your favorite list
+- list TOP100 popular movies from TMDb API
+- search movies by title
+- manage your local favorite list (add/delete)
 
-### Searching
-type the title of the movies in search bar
 ### Favorite List
-In index page, press the `+` button on the movie to keep it into favorite list.
-You can checkout the favorite list in `favorite.html`
-press `x` to remove it from favorite list
+In index page, press the `+` button on the movie to add it into your local favorite list.
+Under the `favorite` tag, you can see your favorite list and you can press `x` to remove any item.
