@@ -7,7 +7,8 @@ Check it here: https://liondon.github.io/movie_list/
 - list TOP100 popular movies from TMDb API
 - search movies by title
 - manage your local favorite list (add/delete)
+- different viewmode: list and grid
 
 ### Favorite List
-In index page, press the `+` button on the movie to add it into your local favorite list.
+In index page, press the `+` button on the movie to add it into your local favorite list.  
 Under the `favorite` tag, you can see your favorite list and you can press `x` to remove any item.
