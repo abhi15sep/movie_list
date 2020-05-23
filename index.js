@@ -3,9 +3,10 @@ a JavaScript function that runs as soon as it is defined,
 to avoid name conflict with other libraries. */
 
 (function () {
-  const BASE_URL = 'https://movie-list.alphacamp.io'
-  const INDEX_URL = `${BASE_URL}/api/v1/movies/`
-  const POSTER_URL = `${BASE_URL}/posters/`
+  const BASE_URL = 'https://api.themoviedb.org/3'
+  const API_KEY = '0cc03cbc79a7a9a9766a411329ecb91d'
+  const INDEX_URL = `${BASE_URL}/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc`
+  const POSTER_URL = `http://image.tmdb.org/t/p/w185/`
   const data = []
   const dataPanel = document.querySelector('#data-panel')
   const searchForm = document.getElementById('search')
@@ -18,29 +19,33 @@ to avoid name conflict with other libraries. */
   let currPage = 1
 
   // get movie data by a third-party API
-  axios
-    .get(INDEX_URL)
-    .then((response) => {
-      // use spread operator
-      data.push(...response.data.results)
-      /* or use for-of loop/ forEach method
-      for (let item of response.data.results) {
-        data.push(item)
-      }
-      */
-      console.log(`data.length: ${data.length}`)
-      // displayDataList(data)
-      getTotalPages(data)
-      getPageData(1, data)
-    }).catch((err) => { console.log(err) })
+  for (let i = 1; i < 6; i++) {
+    axios
+      .get(`${INDEX_URL}&page=${i}`)
+      .then((response) => {
+        // use spread operator
+        data.push(...response.data.results)
+        /* or use for-of loop/ forEach method
+        for (let item of response.data.results) {
+          data.push(item)
+        }
+        */
+        console.log(`data.length: ${data.length}`)
+        // displayDataList(data)
+        getTotalPages(data)
+        getPageData(1, data)
+      }).catch((err) => { console.log(err) })
+  }
 
   // listen to data panel click event
   dataPanel.addEventListener('click', (event) => {
     if (event.target.matches('.btn-show-movie')) {
-      showMovie(event.target.dataset.id)
+      const data = event.target.dataset
+      // console.log(data)
+      showMovie(data.title, data.poster_path, data.release_date, data.overview)
     } else if (event.target.matches('.btn-add-favorite')) {
       // console.log(event.target.dataset.id)
-      addFovoriteItem(event.target.dataset.id)
+      addFavoriteItem(event.target.dataset.id)
     }
   })
 
@@ -85,13 +90,13 @@ to avoid name conflict with other libraries. */
         htmlContent += `
         <div class="col-sm-3">
           <div class="card mb-2">
-            <img class="card-img-top" src="${POSTER_URL}${item.image}" alt="Card image cap">
+            <img class="card-img-top" src="${POSTER_URL}${item.poster_path}" alt="Card image cap">
             <div class="card-body movie-item-body">
               <h6>${item.title}</h6>
             </div>
             <div class="card-footer">
               <!-- "More" button -->
-              <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-id="${item.id}">More</button>
+              <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-title="${item.title}" data-poster_path="${item.poster_path}", data-release_date="${item.release_date}", data-overview="${item.overview}">More</button>
               <!-- "Favorite" button -->
               <button class="btn btn-info btn-add-favorite" data-id="${item.id}">+</button>            
             </div>
@@ -118,7 +123,7 @@ to avoid name conflict with other libraries. */
               <td class="align-middle">${item.title}</td>
               <td class="align-middle">            
                 <!-- "More" button -->
-                <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-id="${item.id}">More</button>
+                <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-title="${item.title}" data-poster_path="${item.poster_path}", data-release_date="${item.release_date}", data-overview="${item.overview}">More</button>
                 <!-- "Favorite" button -->
                 <button class="btn btn-info btn-add-favorite" data-id="${item.id}">+</button>            
               </td>
@@ -130,26 +135,20 @@ to avoid name conflict with other libraries. */
     dataPanel.innerHTML = htmlContent
   }
 
-  function showMovie(id) {
+  function showMovie(title, poster_path, release_date, overview) {
     const modalTitle = document.getElementById('show-movie-title')
     const modalImg = document.getElementById('show-movie-image')
     const modalDate = document.getElementById('show-movie-date')
     const modalDescription = document.getElementById('show-movie-description')
-    const url = INDEX_URL + id
-    console.log(url)
-    axios.get(url).then(response => {
-      const data = response.data.results
-      console.log(data)
-      modalTitle.textContent = data.title
-      modalImg.innerHTML = `
-        <img src="${POSTER_URL}${data.image}" class="img-fluid" alt="Responsive image">
-      `
-      modalDate.textContent = `release at: ${data.release_date}`
-      modalDescription.textContent = `${data.description}`
-    }).catch(err => console.log(err))
+    modalTitle.textContent = title
+    modalImg.innerHTML = `
+      <img src="${POSTER_URL}${poster_path}" class="img-fluid" alt="Responsive image">
+    `
+    modalDate.textContent = `release at: ${release_date}`
+    modalDescription.textContent = `${overview}`
   }
 
-  function addFovoriteItem(id) {
+  function addFavoriteItem(id) {
     const list = JSON.parse(localStorage.getItem('favoriteMovies')) || []
     const movie = data.find(item => item.id === Number(id))
     if (list.some(item => item.id === Number(id))) {
@@ -181,5 +180,4 @@ to avoid name conflict with other libraries. */
     let pageData = paginationData.slice(offset, offset + ITEM_PER_PAGE)
     displayDataList(pageData)
   }
-
 })()
