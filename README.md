@@ -1,6 +1,6 @@
 # Movie List
 A simple web application of movies that user can store their favorite list locally.  
-Built with JavaScript/HTML/CSS, Axios, Bootstrap, and TMDb APIs (but is not endorsed or certified by TMDb).
+Built with JavaScript/HTML/CSS, Axios, Bootstrap, and TMDb APIs (but is not endorsed or certified by TMDb).  
 Check it https://liondon.github.io/movie_list/
 
 ## Features
