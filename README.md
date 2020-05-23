@@ -10,5 +10,5 @@ Check it here: https://liondon.github.io/movie_list/
 - different viewmode: list and grid
 
 ### Favorite List
-In index page, press the `+` button on the movie to add it into your local favorite list.  
-Under the `favorite` tag, you can see your favorite list and you can press `x` to remove any item.
+On `home` page, press `+` button to add a movie into your local favorite list.  
+On `favorite` page, you can see your favorite list and you can press `x` to remove any movie from it.
